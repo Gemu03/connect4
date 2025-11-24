@@ -16,11 +16,12 @@ class GioPolicy(Policy):
         self.COLUMN_COUNT = 7
         self.WINDOW_LENGTH = 4
 
-    def mount(self):
+    def mount(self, time_out=None):
         """Carga conocimiento previo si existe"""
+        # time_out añadido para compatibilidad con la firma del torneo
         path = Path(__file__).parent / "train" / "q_table.pkl"
         if path.exists():
-            try:
+            try: 
                 with open(path, 'rb') as f:
                     self.q_table = pickle.load(f)
             except:
@@ -33,42 +34,62 @@ class GioPolicy(Policy):
         # Identificar jugador
         pieces = np.sum(board != 0)
         player = 1 if pieces % 2 == 0 else -1
-        state = ConnectState(board=board, player=player)
+        
+        # Estado base para consultas
+        base_state = ConnectState(board=board, player=player)
+        valid_cols = base_state.get_free_cols()
 
         # 1. MATA-INSTANTANEA: Si puedo ganar ya, gano.
-        valid_cols = state.get_free_cols()
         for col in valid_cols:
-            if state.transition(col).get_winner() == player:
-                return col
+            try:
+                # Usamos copy para no dañar el tablero original
+                temp_board = board.copy()
+                temp_state = ConnectState(board=temp_board, player=player)
+                if temp_state.transition(col).get_winner() == player:
+                    return col
+            except ValueError:
+                continue
 
         # 2. BLOQUEO DE EMERGENCIA: Si el rival gana en la siguiente, bloqueo.
         opp_state = ConnectState(board=board, player=-player)
         for col in valid_cols:
-            if opp_state.transition(col).get_winner() == -player:
-                return col
+            try:
+                # Simulamos como el oponente en una copia
+                temp_board = board.copy()
+                temp_opp_state = ConnectState(board=temp_board, player=-player)
+                if temp_opp_state.transition(col).get_winner() == -player:
+                    return col
+            except ValueError:
+                continue
 
         # 3. MINIMAX CON PODA ALFA-BETA
         # Ordenamos columnas priorizando el centro para podar más rápido
         ordered_cols = sorted(valid_cols, key=lambda x: abs(x - 3))
         
         best_score = -float('inf')
-        best_col = random.choice(ordered_cols)
+        best_col = random.choice(ordered_cols) if ordered_cols else 0
 
         alpha = -float('inf')
         beta = float('inf')
 
         for col in ordered_cols:
-            # Simulamos jugada
-            new_state = state.transition(col)
-            score = self.minimax(new_state, self.depth - 1, alpha, beta, False, player)
-            
-            if score > best_score:
-                best_score = score
-                best_col = col
-            
-            alpha = max(alpha, best_score)
-            if alpha >= beta:
-                break
+            try:
+                # Simulamos jugada en una copia
+                temp_board = board.copy()
+                sim_state = ConnectState(board=temp_board, player=player)
+                new_state = sim_state.transition(col)
+                
+                score = self.minimax(new_state, self.depth - 1, alpha, beta, False, player)
+                
+                if score > best_score:
+                    best_score = score
+                    best_col = col
+                
+                alpha = max(alpha, best_score)
+                if alpha >= beta:
+                    break
+            except ValueError:
+                continue
                 
         return int(best_col)
 
@@ -91,20 +112,33 @@ class GioPolicy(Policy):
         if maximizingPlayer:
             value = -float('inf')
             for col in valid_cols:
-                new_state = state.transition(col)
-                score = self.minimax(new_state, depth - 1, alpha, beta, False, player_id)
-                value = max(value, score)
-                alpha = max(alpha, value)
-                if alpha >= beta: break
+                try:
+                    # Copia segura para la recursión
+                    temp_board = state.board.copy()
+                    temp_state = ConnectState(board=temp_board, player=state.player)
+                    new_state = temp_state.transition(col)
+                    
+                    score = self.minimax(new_state, depth - 1, alpha, beta, False, player_id)
+                    value = max(value, score)
+                    alpha = max(alpha, value)
+                    if alpha >= beta: break
+                except ValueError:
+                    continue
             return value
         else:
             value = float('inf')
             for col in valid_cols:
-                new_state = state.transition(col)
-                score = self.minimax(new_state, depth - 1, alpha, beta, True, player_id)
-                value = min(value, score)
-                beta = min(beta, value)
-                if alpha >= beta: break
+                try:
+                    temp_board = state.board.copy()
+                    temp_state = ConnectState(board=temp_board, player=state.player)
+                    new_state = temp_state.transition(col)
+                    
+                    score = self.minimax(new_state, depth - 1, alpha, beta, True, player_id)
+                    value = min(value, score)
+                    beta = min(beta, value)
+                    if alpha >= beta: break
+                except ValueError:
+                    continue
             return value
 
     def score_position(self, board, piece):
