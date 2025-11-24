@@ -42,4 +42,4 @@ pip install numpy matplotlib tqdm notebook
 La Documentación completa del proyecto, se encuentra en el archivo `entrega.ipynb`, donde se detalla la implementación, pruebas y resultados obtenidos por el agente.
 
 ##  Presentaicón
-La presentación del proyecto se puede encontrar en el siguiente enlace: [Presentación Connect-4](https
+La presentación del proyecto se puede encontrar en el siguiente enlace: [Presentación Connect-4](https://docs.google.com/presentation/d/1v4qAmhsMKwYHcfxli3EaFQX9k_RKwrynFF7ure36CtU/edit?usp=sharing)
