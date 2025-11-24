@@ -6,7 +6,7 @@ from collections import defaultdict
 from connect4.policy import Policy
 from connect4.connect_state import ConnectState
 
-class Policy(Policy):
+class GioPolicy(Policy):
     def __init__(self, depth=4):
         super().__init__()
         self.depth = depth  # Profundidad 4 ve ~4500-10000 estados por jugada
