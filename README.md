@@ -1,45 +1,51 @@
-# Agente Inteligente para Connect-4 (Grupo C)
+# Connect-4 Intelligent Agent
 
-Este repositorio contiene la implementación de **`Policy`**, un agente diseñado para el "Reto Connect-4" del curso Fundamentos de Inteligencia Artificial (2025.2) en la Universidad de La Sabana.
+This repository contains the implementation of **`Policy`**, an AI agent built for the "Connect-4 Challenge" in the *Foundations of Artificial Intelligence* course (2025.2) at Universidad de La Sabana.
 
-## 🧠 Estrategia del Agente
+## 🧠 Agent Strategy
 
-Nuestro agente utiliza una **Arquitectura Híbrida** que combina búsqueda adversaria con aprendizaje por refuerzo para garantizar un rendimiento robusto desde la primera partida:
+The agent uses a **hybrid architecture** that combines adversarial search with reinforcement learning to deliver robust performance from the very first game:
 
-1.  **Motor de Búsqueda:** Algoritmo **Minimax con Poda Alfa-Beta** y profundidad dinámica (`depth=4`) para razonamiento táctico.
-2.  **Heurística Posicional:** Evaluación matemática basada en el control del centro y ventanas de 4 fichas para guiar la búsqueda en nodos hoja desconocidos.
-3.  **Persistencia (Q-Learning):** Integración de una **Q-Table** que permite al agente "recordar" estados visitados y aprender de partidas previas (*Self-Play*).
-4.  **Defensa Reactiva:** Lógica de bloqueo de emergencia para evitar derrotas inmediatas antes de iniciar la búsqueda profunda.
+1. **Search engine:** **Minimax with Alpha-Beta pruning** and dynamic depth (`depth=4`) for tactical reasoning.
+2. **Positional heuristic:** Mathematical evaluation based on center control and 4-token windows to guide the search at unknown leaf nodes.
+3. **Persistence (Q-Learning):** A **Q-Table** that lets the agent "remember" visited states and learn from previous games (*self-play*).
+4. **Reactive defense:** Emergency blocking logic to avoid immediate losses before starting the deep search.
 
-## 📂 Estructura del Proyecto
+## 📂 Project Structure
 
 ```text
 .
 ├── groups/
 │   └── GroupC/
-│       ├── policy.py          # Código fuente del agente (Policy)
+│       ├── policy.py          # Agent source code (Policy)
 │       └── train/
-│           └── q_table.pkl    # Conocimiento aprendido (Persistencia)
-├── connect4/                  # Lógica base del juego (entorno)
-├── entrega.ipynb              # Notebook de validación, entrenamiento y gráficas
-└── README.md                  # Este archivo
+│           └── q_table.pkl    # Learned knowledge (persistence)
+├── connect4/                  # Core game logic (environment)
+├── entrega.ipynb              # Validation, training and plotting notebook
+└── README.md                  # This file
 ```
 
-## 🚀 Instalación y Ejecución
+## 🚀 Installation & Usage
 
-1. Clona este repositorio:
+1. Clone this repository:
 ```bash
 git clone https://github.com/Gemu03/connect4
 cd connect4
 ```
 
-2. Instala las dependencias necesarias
+2. Install the required dependencies:
 ```bash
-pip install numpy matplotlib tqdm notebook    
+pip install numpy matplotlib tqdm notebook
 ```
 
-##  Documentación 
-La Documentación completa del proyecto, se encuentra en el archivo `entrega.ipynb`, donde se detalla la implementación, pruebas y resultados obtenidos por el agente.
+## 🛠️ Tech Stack
 
-##  Presentaicón
-La presentación del proyecto se puede encontrar en el siguiente enlace: [Presentación Connect-4](https://docs.google.com/presentation/d/1v4qAmhsMKwYHcfxli3EaFQX9k_RKwrynFF7ure36CtU/edit?usp=sharing)
+Python · NumPy · Minimax + Alpha-Beta pruning · Q-Learning · Jupyter Notebook
+
+## 📖 Documentation
+
+The full project documentation is in `entrega.ipynb`, which details the implementation, tests, and results obtained by the agent.
+
+## 🎤 Presentation
+
+The project presentation is available here: [Connect-4 Presentation](https://docs.google.com/presentation/d/1v4qAmhsMKwYHcfxli3EaFQX9k_RKwrynFF7ure36CtU/edit?usp=sharing)
