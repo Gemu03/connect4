@@ -2,6 +2,10 @@
 
 This repository contains the implementation of **`Policy`**, an AI agent built for the "Connect-4 Challenge" in the *Foundations of Artificial Intelligence* course (2025.2) at Universidad de La Sabana.
 
+<p align="center">
+  <img src="docs/screenshot.webp" alt="Connect-4 AI agent" width="700" />
+</p>
+
 ## 🧠 Agent Strategy
 
 The agent uses a **hybrid architecture** that combines adversarial search with reinforcement learning to deliver robust performance from the very first game:
